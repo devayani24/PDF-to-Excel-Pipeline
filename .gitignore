@@ -145,6 +145,14 @@ ENV/
 env.bak/
 venv.bak/
 
+# PyInstaller build outputs
+build/
+dist/
+*.spec
+
+# Data files (sensitive / large)
+data/
+
 # Spyder project settings
 .spyderproject
 .spyproject

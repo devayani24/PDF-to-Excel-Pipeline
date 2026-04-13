@@ -9,14 +9,37 @@ from typing import List
 # Export Function
 # ---------------------------
 
-def export_dataframe_to_csv(df: pd.DataFrame,file_name: str,dir_path: str = "artifacts")-> str:
+def export_dataframe_to_csv(df: pd.DataFrame,file_name: str,output_folder: str)-> str:
     try:
-        path: str = os.path.join(dir_path,file_name)
+        # ---------------------------
+        # If user selected folder → use it
+        # else fallback (optional)
+        # ---------------------------
+        if output_folder:
+            full_dir_path = output_folder
+        else:
 
-        # Create directory if it doesn't exist
-        os.makedirs(os.path.dirname(path),exist_ok=True)
-    
-        df.to_csv(path,index=False,header=True)
+            # ---------------------------
+            # Base path (important for .exe)
+            # ---------------------------
+            if getattr(sys, 'frozen', False):
+                full_dir_path = os.path.dirname(sys.executable)
+            else:
+                full_dir_path = os.getcwd()
+
+        # Create directory if not exists
+        os.makedirs(full_dir_path, exist_ok=True)
+
+        # ---------------------------
+        # Full file path
+        # ---------------------------
+        path = os.path.join(full_dir_path, file_name)
+
+
+       
+        # Save file
+        df.to_csv(path, index=False, header=True)
+
         logging.info(f"Exported DataFrame to CSV: {path}")
 
         return path
@@ -29,14 +52,17 @@ def export_dataframe_to_csv(df: pd.DataFrame,file_name: str,dir_path: str = "art
 # Validation
 # ---------------------------   
 
-def dataframe_validation(*args: List):
+def dataframe_validation(*args: List, columns: List[str] = None):
     try: 
         if not args:
             raise ValueError("No data provided")
         
         lengths = [len(l) for l in args]
-        
+
         if len(set(lengths))!=1:
+            # Debug export
+            debug_lists_to_csv(**dict(zip(columns, args)))
+            
             raise ValueError(f"List lengths mismatch: {lengths}")
         
         logging.info(f"Validation passed. Length: {lengths[0]}")
@@ -56,7 +82,7 @@ def convert_list_to_dataframe (*args: List,columns: List[str]) -> pd.DataFrame:
                 f"Columns ({len(columns)}) and data lists ({len(args)}) mismatch"
             )
 
-        dataframe_validation(*args)
+        dataframe_validation(*args,columns=columns)
 
         df = pd.DataFrame(dict(zip(columns, args)))
 
@@ -67,3 +93,13 @@ def convert_list_to_dataframe (*args: List,columns: List[str]) -> pd.DataFrame:
     except Exception as e:
         logging.error("Error while converting lists to DataFrame")
         raise CustomException(e, sys)
+    
+
+def debug_lists_to_csv(**kwargs):
+    
+    
+    df = pd.DataFrame({
+        key: pd.Series(value) for key, value in kwargs.items()
+    })
+    
+    df.to_csv("debug_output.csv", index=False)
