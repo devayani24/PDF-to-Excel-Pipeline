@@ -16,36 +16,6 @@ Designed to handle multiple bank formats with a scalable and modular architectur
 - ✅ User-friendly Tkinter GUI
 - ✅ Extensible architecture for adding new banks
 
----
-
-## Project Structure
-PDF-to-Excel-Pipeline/
-│
-├── app/
-│ └── ui.py # Tkinter UI
-│
-├── src/
-│ ├── components/ # Core logic
-│ │ ├── ingestion.py
-│ │ ├── transaction_parser.py
-│ │
-│ ├── processors/ # Bank-specific processors
-│ │ ├── indian_bank_processor.py
-│ │ ├── kotak_processor.py
-│ │ ├── canara_bank_processor.py
-│ │
-│ ├── utils.py # Helper functions
-│ ├── exception.py
-│ └── logger.py
-│
-├── data/ # Sample PDFs (ignored in git)
-├── output/ # Generated Excel files
-├── requirements.txt
-└── README.md
-
-
----
-
 ## Installation
 
 ### 1. Clone the repository
