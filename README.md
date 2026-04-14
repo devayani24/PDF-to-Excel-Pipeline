@@ -20,7 +20,7 @@ Designed to handle multiple bank formats with a scalable and modular architectur
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-username/pdf-to-excel-pipeline.git
+git clone https://github.com/devayani24/PDF-to-Excel-Pipeline.git
 cd pdf-to-excel-pipeline
 
 ### 2. Create virtual environment
