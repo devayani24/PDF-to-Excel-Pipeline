@@ -68,6 +68,10 @@ Create a new processor in src/processors/
 Override parsing logic if needed
 Plug into UI
 
+## Screenshot of UI
+<img width="593" height="691" alt="image" src="https://github.com/user-attachments/assets/0c6b31c4-e4cd-4f1b-881b-ab7355e04e87" />
+
+
 ## Tech Stack
 - Python
 - Pandas
