@@ -22,8 +22,11 @@ Designed to handle multiple bank formats with a scalable and modular architectur
 git clone https://github.com/devayani24/PDF-to-Excel-Pipeline.git
 cd pdf-to-excel-pipeline
 
-### 2. Create virtual environment
+### 2. Virtual environment
+#### 1. Create virtual environment
 python -m venv venv
+
+#### 2. Activate environment
 venv\Scripts\activate   # Windows
 
 ### 3. Install dependencies
@@ -32,11 +35,11 @@ pip install -r requirements.txt
 ### 4. Run the application
 python app/ui.py
 Steps:
-Select a bank
-Upload PDF file
-Enter password (if required)
-Choose save location
-Click Process
+- Select a bank
+- Upload PDF file
+- Enter password (if required)
+- Choose save location
+- Click Process
 
 ✅ Output will be saved as Excel file
 
@@ -66,20 +69,19 @@ Override parsing logic if needed
 Plug into UI
 
 ## Tech Stack
-Python
-Pandas
-PDFPlumber
-PyMuPDF (fitz)
-Tesseract OCR
-Tkinter
-Regex
+- Python
+- Pandas
+- PDFPlumber
+- PyMuPDF (fitz)
+- Tkinter
+- Regex
 
 ## Future Improvements
-XML export support
-Cloud deployment (AWS)
-API-based processing (FastAPI)
-Drag-and-drop UI
-Auto bank detection
+- XML export support
+- Cloud deployment (AWS)
+- API-based processing (FastAPI)
+- Drag-and-drop UI
+- Auto bank detection
 
 ## Known Limitations
 Highly inconsistent PDF formats may require custom parsing
