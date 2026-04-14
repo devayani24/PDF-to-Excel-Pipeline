@@ -10,7 +10,6 @@ Designed to handle multiple bank formats with a scalable and modular architectur
 - ✅ Convert PDF bank statements to Excel
 - ✅ Supports multiple banks (Indian Bank, Canara, Kotak, City Union Bank, etc.)
 - ✅ Handles encrypted/password-protected PDFs
-- ✅ OCR support for scanned PDFs (Tesseract)
 - ✅ Intelligent transaction parsing (date, debit, credit, balance)
 - ✅ Clean and structured Excel output
 - ✅ User-friendly Tkinter GUI
@@ -49,7 +48,7 @@ Detects if PDF is password protected
 Prompts user for password
 Retries if incorrect password is entered
 
-🧠 Architecture
+## Architecture
 
 This project follows a modular + scalable design:
 
@@ -81,7 +80,6 @@ Cloud deployment (AWS)
 API-based processing (FastAPI)
 Drag-and-drop UI
 Auto bank detection
-Improved OCR accuracy
 
 ## Known Limitations
 Highly inconsistent PDF formats may require custom parsing
