@@ -157,6 +157,11 @@ dist/
 # Data files (sensitive / large)
 data/
 
+#logs
+logs/
+*.log
+debug_output.csv
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -218,3 +223,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
