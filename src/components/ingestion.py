@@ -12,7 +12,7 @@ from src.utils import export_dataframe_to_csv,convert_list_to_dataframe
 class PDFPlumberReader():
     
     
-    def extract_text_from_pdf(self, filepath: str, password: str) -> List[str]:
+    def extract_text_from_pdf(self, filepath: str, password: str = None) -> List[str]:
         """
         Extracts text line by line from a PDF file.
         """

@@ -2,4 +2,4 @@ pandas
 pdfplumber
 tabula-py
 pyinstaller
--e .
+pytest

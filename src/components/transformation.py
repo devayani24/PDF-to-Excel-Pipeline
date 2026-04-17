@@ -21,7 +21,7 @@ class DataTransformer:
         try:
             logging.info("Finding first transaction index")
 
-            mask = self.df[self.raw_column].str.contains(self.start_index_string, case=False, na=False)
+            mask = self.df[self.raw_column].str.contains(self.start_index_string, case=False, na=False, regex=True)
 
             indices = self.df.loc[mask].index
 
