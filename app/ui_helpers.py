@@ -14,7 +14,7 @@ def select_save_location(default_name="output.csv"):
 def is_pdf_encrypted(filepath):
     try:
         with pdfplumber.open(filepath) as pdf:
-            page = pdf.pages
+            pdf.pages[0].extract_text()
             return False
     except Exception as e:
         return True

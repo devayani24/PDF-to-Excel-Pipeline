@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, ".")
+
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import threading
@@ -10,7 +13,7 @@ from app.ui_helpers import select_pdf_file, select_save_location, is_pdf_encrypt
 from src.processors.indian_bank_processor import IndianBankProcessor
 from src.processors.kotak_processor import KotakProcessor
 from src.processors.canara_bank_processor import CanaraBankProcessor
-from src.processors.city_union_bank_processor import CityUnionBankProcessor
+from src.processors.city_union_bank_processor import CityUnionProcessor
 from src.processors.HDFC_processor import HDFCProcessor
 from src.processors.KVB_processor import KVBProcessor
 from src.processors.SBI_processor import SBIProcessor
@@ -24,7 +27,7 @@ BANK_PROCESSORS = {
     "Indian Bank": IndianBankProcessor,
     "Kotak": KotakProcessor,
     "Canara Bank": CanaraBankProcessor,
-    "City Union Bank": CityUnionBankProcessor,
+    "City Union Bank": CityUnionProcessor,
     "HDFC": HDFCProcessor,
     "KVB": KVBProcessor,
     "SBI": SBIProcessor
@@ -133,7 +136,16 @@ def run_process(password):
         save_file(df)
 
     except Exception as e:
-        root.after(0, lambda err=e: messagebox.showerror("Error", str(err)))
+        from src.logger import logging
+        logging.error(f"Processing failed: {e}")
+        root.after(0, lambda: messagebox.showerror(
+            "Processing Failed",
+            f"Could not process {selected_bank} PDF.\n\nPlease check:\n"
+            f"- Correct bank is selected\n"
+            f"- PDF is not corrupted\n"
+            f"- Password is correct (if encrypted)\n\n"
+            f"Contact support if issue persists."
+        ))
 
     finally:
         root.after(0, finish_processing)
@@ -148,7 +160,14 @@ def save_file(df):
 
     if path:
         df.to_csv(path, index=False)
-        root.after(0, lambda: messagebox.showinfo("Success", f"Saved at:\n{path}"))
+        root.after(0, lambda: messagebox.showinfo(
+            "Success",
+            f"✅ Processing complete!\n\n"
+            f"Transactions extracted : {len(df)}\n"
+            f"Saved at               : {path}"
+        ))
+    else:
+        root.after(0, lambda: messagebox.showwarning("Cancelled", "File was not saved."))
 
 
 # ---------------- UI STATE ---------------- #
