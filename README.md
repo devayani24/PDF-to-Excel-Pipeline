@@ -1,98 +1,56 @@
-# PDF to Excel Converter (Finance Data Pipeline)
+# BankStatement Pro
 
-A production-grade Python application that converts bank statement PDFs into structured Excel files.  
-Designed to handle multiple bank formats with a scalable and modular architecture.
+![Tests](https://github.com/devayani24/PDF-to-Excel-Pipeline/actions/workflows/ci.yml/badge.svg)
+![Release](https://github.com/devayani24/PDF-to-Excel-Pipeline/actions/workflows/release.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![Platform](https://img.shields.io/badge/platform-Windows-0078D6)
+
+A production desktop tool built for an accounting firm to automate bank statement processing — reducing manual data entry from hours to seconds.
 
 ---
 
-## Features
+## 🎯 Business Problem Solved
 
-- ✅ Convert PDF bank statements to Excel
-- ✅ Supports multiple banks (Indian Bank, Canara, Kotak, City Union Bank, etc.)
-- ✅ Handles encrypted/password-protected PDFs
-- ✅ Intelligent transaction parsing (date, debit, credit, balance)
-- ✅ Clean and structured Excel output
-- ✅ User-friendly Tkinter GUI
-- ✅ Extensible architecture for adding new banks
+Accounting firms process hundreds of bank statements monthly. Each statement requires manually copying transaction data into spreadsheets — a slow, error-prone process.
 
-## Installation
+**BankStatement Pro** extracts transaction data from bank PDFs automatically, cutting processing time by **~95%** and eliminating manual entry errors.
 
-### 1. Clone the repository
+---
 
-git clone https://github.com/devayani24/PDF-to-Excel-Pipeline.git
-cd pdf-to-excel-pipeline
+## 📈 Impact
 
-### 2. Virtual environment
-#### 1. Create virtual environment
-python -m venv venv
+- **7 banks supported** — Indian Bank, SBI, Kotak, Canara, HDFC, KVB, City Union Bank
+- **Deployed to a live client** — actively used in production
+- **Handles 800+ transactions** per statement reliably
+- **Reconciliation validation** — verifies extracted data mathematically before export
 
-#### 2. Activate environment
-venv\Scripts\activate   # Windows
+---
 
-### 3. Install dependencies
-pip install -r requirements.txt
+## 🛠️ Tech Stack
 
-### 4. Run the application
-python app/ui.py
-Steps:
-- Select a bank
-- Upload PDF file
-- Enter password (if required)
-- Choose save location
-- Click Process
+```
+Python 3.11 · pdfplumber · pandas · tkinter
+pytest · GitHub Actions · PyInstaller · Inno Setup
+```
 
-✅ Output will be saved as Excel file
+---
 
-## Handling Encrypted PDFs
+## ✅ Engineering Highlights
 
-The application automatically:
+- **Two parser architectures** — text extraction and coordinate-based, chosen per bank's PDF structure
+- **Config-driven design** — adding a new bank requires 15 lines of config, no logic changes
+- **78% test coverage** with unit, integration and real data validation tests
+- **CI/CD pipeline** — automated testing on every push, automated .exe build and GitHub Release on every tag
+- **Professional installer** built with Inno Setup — ships like real software
 
-Detects if PDF is password protected
-Prompts user for password
-Retries if incorrect password is entered
+---
 
-## Architecture
+## 📸 Screenshots
 
-This project follows a modular + scalable design:
+> *(Add screenshot here)*
 
-Processor Layer → Handles orchestration
-Parser Layer → Extracts and structures transactions
-Bank-specific classes → Custom logic per bank
-UI Layer → User interaction
+---
 
-## Easy to extend:
+## 🔗 Links
 
-To add a new bank:
-
-Create a new processor in src/processors/
-Override parsing logic if needed
-Plug into UI
-
-## Screenshot of UI
-<img width="593" height="691" alt="image" src="https://github.com/user-attachments/assets/0c6b31c4-e4cd-4f1b-881b-ab7355e04e87" />
-
-
-## Tech Stack
-- Python
-- Pandas
-- PDFPlumber
-- PyMuPDF (fitz)
-- Tkinter
-- Regex
-
-## Future Improvements
-- XML export support
-- Cloud deployment (AWS)
-- API-based processing (FastAPI)
-- Drag-and-drop UI
-- Auto bank detection
-
-## Known Limitations
-Highly inconsistent PDF formats may require custom parsing
-
-## Author
-
-Devayani Senthilvelan
-
-Data Science & Backend Engineering
-Python | ML | NLP | Computer Vision
+- [Latest Release](https://github.com/devayani24/PDF-to-Excel-Pipeline/releases/latest)
