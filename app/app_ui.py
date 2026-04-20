@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 import pdfplumber
 
-from app.ui_helpers import select_pdf_file, select_save_location, is_pdf_encrypted
+from ui_helpers import select_pdf_file, select_save_location, is_pdf_encrypted
 
 from src.processors.indian_bank_processor import IndianBankProcessor
 from src.processors.kotak_processor import KotakProcessor
@@ -371,8 +371,32 @@ def clear_all():
 
 
 # ─── BUILD UI ─────────────────────────────────────────────────────────────────
+import sys
+import os
+import ctypes
+
+def resource_path(relative_path):
+    """Get absolute path — works for both dev and PyInstaller exe"""
+    if getattr(sys, '_MEIPASS', None):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 root = tk.Tk()
-root.title("PDF to Excel Tool")
+
+root.iconbitmap(resource_path("bankstatement_pro.ico"))
+
+# Force Windows to use correct icon
+ico_path = resource_path("bankstatement_pro.ico")
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+    "DeeJayInfotech.BankStatementPro.2.0.0"
+)
+
+# This is the key fix for taskbar
+root.wm_iconbitmap(ico_path)
+root.after(200, lambda: root.wm_iconbitmap(ico_path))
+
+root.title("BankStatement Pro")
 root.state("zoomed")
 root.minsize(860, 600)
 root.configure(bg=BG)
@@ -391,10 +415,10 @@ header = tk.Frame(card, bg=PRIMARY, height=72)
 header.pack(fill="x")
 header.pack_propagate(False)
 
-tk.Label(header, text="DEEJAY INFOTECH",
+tk.Label(header, text="DeJay INFOTECH",
          font=("Segoe UI", 9, "bold"),
          fg="#93C5FD", bg=PRIMARY).pack(pady=(14, 0))
-tk.Label(header, text="PDF to Excel Converter",
+tk.Label(header, text="BankStatement Pro",
          font=("Segoe UI", 16, "bold"),
          fg="white", bg=PRIMARY).pack()
 

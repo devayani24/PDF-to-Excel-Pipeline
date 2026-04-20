@@ -3,7 +3,6 @@ from src.exception import CustomException
 from src.logger import logging
 import pandas as pd
 import pdfplumber
-from tabula.io import read_pdf
 from typing import List,Tuple
 
 from src.utils import export_dataframe_to_csv,convert_list_to_dataframe
@@ -51,24 +50,3 @@ class PDFPlumberReader():
         
     
         
-
-class TabulaPDFReader():
-    
-    def read_tables(self, filepath: str) -> pd.DataFrame:
-        try:
-            tables = read_pdf(filepath, pages="all", multiple_tables=True)
-            logging.info(f"Tabula extracted {len(tables)} tables from PDF")
-
-            # Combine all pages
-            final_df  = pd.concat(tables, ignore_index=True) 
-
-
-            return final_df 
-        
-        except Exception as e:
-            logging.error("Error in combine_full_transaction process")
-            raise CustomException(e, sys)
-        
-
-class OCRReader():
-    pass
