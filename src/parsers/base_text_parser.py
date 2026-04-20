@@ -1,23 +1,30 @@
 import sys
 import re
 import pandas as pd
+from dataclasses import dataclass, field
+from typing import List, Tuple
 from src.exception import CustomException
 from src.logger import logging
-from typing import List,Tuple
-from src.utils import export_dataframe_to_csv,convert_list_to_dataframe,dataframe_validation
+from src.utils import convert_list_to_dataframe, dataframe_validation
 
 
+@dataclass
+class BaseTextParserConfig:
+    date_patterns:  str
+    amount_pattern: str
+    stop_markers:   tuple
 
-
-class BaseTransactionParser:
+class BaseTextParser:
 
     def __init__(self, txn_df: pd.DataFrame):
         self.txn_df = txn_df
+        self.config = self._get_config()
+        self.start_txn_pattern = self.config.date_patterns
 
-        self.date_patterns = r'(\d{2}\s\w{3}\s\d{4})'
-        self.amount_pattern = r'(?:(-)\sINR\s(.+)\sINR\s(.+))|(?:INR\s(.+)\s(-)\sINR\s(.+))'
-        self.start_txn_pattern = self.date_patterns
-
+    def _get_config(self) -> BaseTextParserConfig:
+        raise NotImplementedError(
+            f"{self.__class__.__name__} must implement _get_config()"
+        )
 
     # ---------------------------
     # Step 1: Split Rows
@@ -29,10 +36,7 @@ class BaseTransactionParser:
 
         for line in self.txn_df["raw"]:
 
-            if "Ending Balance" in line:
-                logging.info(f"Stopping at line: {line}")
-                break
-            if "Statement Summary" in line:
+            if any(marker in line for marker in self.config.stop_markers):
                 logging.info(f"Stopping at line: {line}")
                 break
 
@@ -64,11 +68,11 @@ class BaseTransactionParser:
     # Step 2: Extract Fields
     # ---------------------------
     def extract_date(self, line: str) -> str:
-        match = re.search(self.date_patterns, line)
+        match = re.search(self.config.date_patterns, line)
         return match.group(1) if match else None
 
     def extract_amounts(self, line: str) -> Tuple[str, str, str]:
-        match = re.search(self.amount_pattern, line)
+        match = re.search(self.config.amount_pattern, line)
 
         if not match:
             return None, None, None
@@ -81,25 +85,22 @@ class BaseTransactionParser:
             return groups[3], groups[4], groups[5]
 
     def extract_transaction_details(self, line: str) -> str:
-        temp = re.sub(self.date_patterns, "", line)
-        temp = re.sub(self.amount_pattern, "", temp)
+        temp = re.sub(self.config.date_patterns, "", line)
+        temp = re.sub(self.config.amount_pattern, "", temp)
         return re.sub(r"\s+", " ", temp).strip()
     
     def combine_transaction_details(self,txn_details_from_date_row,split_txn_details):
         try:
-            dataframe_validation(txn_details_from_date_row,split_txn_details, columns = ["txn1", "txn2"])
-            if len(txn_details_from_date_row) == len(split_txn_details):
-
-                full_txn = [
-                        f"{t1} {t2}".strip()
-                        for t1, t2 in zip(txn_details_from_date_row, split_txn_details)
-                    ]
-                return full_txn
-            else:
-                raise ValueError(f"List lengths mismatch while combining two transactional details {len(txn_details_from_date_row)}, {len(split_txn_details)}")
-            
+            dataframe_validation(
+                txn_details_from_date_row, split_txn_details,
+                columns=["txn1", "txn2"]
+            )
+            return [
+                f"{t1} {t2}".strip()
+                for t1, t2 in zip(txn_details_from_date_row, split_txn_details)
+            ]
         except Exception as e:
-            logging.error("Error in combine_full_transaction process")
+            logging.error("Error in combine_transaction_details")
             raise CustomException(e, sys)
 
     # ---------------------------
@@ -107,7 +108,7 @@ class BaseTransactionParser:
     # ---------------------------
     def transform(self) -> pd.DataFrame:
         try:
-            logging.info("Starting transaction split process")
+            logging.info(f"Starting {self.__class__.__name__} transform")
 
             date_rows, split_txn_details = self.split_transactions()
 
@@ -133,12 +134,11 @@ class BaseTransactionParser:
                 columns=["date", "transaction_details", "debit", "credit", "balance"]
             )
 
-            logging.info("Transaction split completed successfully")
-
+            logging.info(f"{self.__class__.__name__} transform completed")
             return df
 
         except Exception as e:
-            logging.error("Error in transaction split process")
+            logging.error(f"Error in {self.__class__.__name__} transform")
             raise CustomException(e, sys)
 
     

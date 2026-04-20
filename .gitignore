@@ -156,6 +156,8 @@ dist/
 
 # Data files (sensitive / large)
 data/
+scripts/validate_real_data.py
+data/output_*.csv
 
 #logs
 logs/

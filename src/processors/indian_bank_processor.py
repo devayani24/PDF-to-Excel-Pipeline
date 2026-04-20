@@ -1,24 +1,10 @@
-import sys
-from src.exception import CustomException
-from src.processors.base_processor import BaseProcessor
-from src.parsers.base_transaction_parser import BaseTransactionParser
+from src.processors.base_text_processor import BaseTextProcessor
+from src.parsers.indian_bank_parser import IndianBankParser
 
 
-class IndianBankProcessor(BaseProcessor):
-
+class IndianBankProcessor(BaseTextProcessor):
     def get_parser(self, txn_df):
-        return BaseTransactionParser(txn_df)
+        return IndianBankParser(txn_df)
     
-
-
-# if __name__ == "__main__":
-#     try:
-#         processor = IndianBankProcessor('data/IndianBank.pdf')
-#         df = processor.transform()
-#         output_path = processor.export(df)
-#         print(output_path)
-
-        
-
-#     except Exception as e:
-#         raise CustomException(e, sys)
+    def set_start_index_string(self):
+        return r"^\d{2}\s\w{3}\s\d{4}"
