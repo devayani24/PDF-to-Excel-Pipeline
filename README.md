@@ -47,7 +47,8 @@ pytest · GitHub Actions · PyInstaller · Inno Setup
 
 ## 📸 Screenshots
 
-> *(Add screenshot here)*
+<img width="954" height="892" alt="image" src="https://github.com/user-attachments/assets/37695c4a-e3ca-400d-ad64-c35fba374d20" />
+
 
 ---
 
