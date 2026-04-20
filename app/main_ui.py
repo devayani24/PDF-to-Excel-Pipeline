@@ -231,7 +231,7 @@ def clear_all():
 # ---------------- UI ---------------- #
 
 root = tk.Tk()
-root.title("PDF to Excel Tool")
+root.title('BankStatement Pro')
 
 root.state("zoomed")          # full screen
 root.minsize(900, 600)        # prevent too small window
@@ -243,7 +243,7 @@ main_frame.pack(expand=True, fill="both", padx=200, pady=70)
 # Company Name
 company_label = tk.Label(
     main_frame,
-    text="DEEJAY INFOTECH",
+    text="DeJay INFOTECH",
     font=("Segoe UI", 12, "bold"),
     fg="#cc0000",          # subtle brand color
     bg="#ffffff"
@@ -253,7 +253,7 @@ company_label.pack(pady=(0, 2))
 # Title
 title_label = tk.Label(
     main_frame,
-    text="PDF to Excel Converter",
+    text='BankStatement Pro',
     font=("Segoe UI", 22, "bold"),
     fg="#1f4e79",
     bg="#ffffff"
