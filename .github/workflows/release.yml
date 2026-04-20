@@ -1,0 +1,45 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt pyinstaller
+
+      - name: Build exe with PyInstaller
+        run: pyinstaller --onefile --windowed --icon=bankstatement_pro.ico --version-file=version.txt --name="BankStatement Pro" --add-data "app/ui_helpers.py;." --add-data "src;src" --add-data "bankstatement_pro.ico;." app/app_ui.py
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Build Installer
+        run: iscc setup.iss
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: BankStatementPro_Setup_v*.exe
+          name: BankStatement Pro ${{ github.ref_name }}
+          body: |
+            ## BankStatement Pro ${{ github.ref_name }}
+
+            ### What's new
+            - Add your release notes here
+
+            ### Download
+            Download the installer below and run it.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
