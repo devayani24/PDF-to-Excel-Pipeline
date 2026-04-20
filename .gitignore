@@ -158,6 +158,7 @@ dist/
 data/
 scripts/validate_real_data.py
 data/output_*.csv
+BankStatementPro_Setup_*.exe
 
 #logs
 logs/
