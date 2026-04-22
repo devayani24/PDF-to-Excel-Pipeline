@@ -1,4 +1,3 @@
-# src/parsers/base_pdf_parser.py
 import sys
 import re
 import pdfplumber
@@ -11,19 +10,22 @@ from src.utils import convert_list_to_dataframe
 
 @dataclass
 class ParserConfig:
-    date_pattern:       str
-    bbox_first_page:    Tuple
-    bbox_other_pages:   Tuple
-    x_date_max:         float
-    x_particulars_min:  float
-    x_particulars_max:  float
-    x_withdrawal_min:   float
-    x_withdrawal_max:   float
-    x_deposit_min:      float
-    x_deposit_max:      float
-    x_balance_min:      float
-    stop_markers:       List[str] = field(default_factory=list)
-    break_markers:      List[str] = field(default_factory=list)
+    date_pattern:           str
+    default_top_1:          float
+    default_top_other:      float
+    crop_increment_1:       int
+    crop_increment_other:   int
+    x_date_max:             float
+    x_particulars_min:      float
+    x_particulars_max:      float
+    x_withdrawal_min:       float
+    x_withdrawal_max:       float
+    x_deposit_min:          float
+    x_deposit_max:          float
+    x_balance_min:          float
+    stop_markers:           List[str] = field(default_factory=list)
+    break_markers:          List[str] = field(default_factory=list)
+    column_list:            List[str] = field(default_factory=list)
 
 
 class BaseCoordinateParser:
@@ -39,19 +41,43 @@ class BaseCoordinateParser:
         raise NotImplementedError(
             f"{self.__class__.__name__} must implement _get_config()"
         )
+    
+    def get_bbox_text_top(self, page , column_list: list) -> float:
+
+        if not column_list:
+            return None
+            
+        words = page.extract_words()
+        tops= []
+
+        for w in words:
+            text = w['text']
+            if text in column_list:
+                tops.append(w['top'])
+            if text == column_list[-1]:
+                break
+
+        if tops and len(set(tops)) == 1:
+            return tops[-1]
+
+        return None
 
     # ---------------------------
     # Helper Methods
     # ---------------------------
-    def _get_bbox(self, page, page_index: int) -> Tuple:
-        bbox_raw = self.config.bbox_first_page if page_index == 0 else self.config.bbox_other_pages
-        x0, y0, x1, y1 = bbox_raw
-        return (
-            x0,
-            y0,
-            x1 if x1 is not None else page.width,
-            y1 if y1 is not None else page.height,
-        )
+    def _get_bbox(self, page, page_index: int, ) -> Tuple:
+        
+        increment   = self.config.crop_increment_1 if page_index == 0 else self.config.crop_increment_other
+        default_top = self.config.default_top_1    if page_index == 0 else self.config.default_top_other
+
+        top = self.get_bbox_text_top(page, self.config.column_list)
+
+        if top is None:
+            top = default_top
+        else:
+            top = top + increment
+
+        return (0, top, page.width, page.height)
 
     def _should_stop(self, text: str) -> bool:
         return any(marker in text for marker in self.config.stop_markers)
