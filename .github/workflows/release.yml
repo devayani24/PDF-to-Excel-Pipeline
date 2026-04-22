@@ -8,29 +8,24 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     permissions:
-      contents: write 
+      contents: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt pyinstaller
-
       - name: Build exe with PyInstaller
         run: pyinstaller --onefile --windowed --icon=bankstatement_pro.ico --version-file=version.txt --name="BankStatement Pro" --add-data "app/ui_helpers.py;." --add-data "src;src" --add-data "bankstatement_pro.ico;." app/app_ui.py
-
       - name: Install Inno Setup
         run: choco install innosetup -y
-
       - name: Build Installer
         run: iscc setup.iss
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -38,11 +33,6 @@ jobs:
           name: BankStatement Pro ${{ github.ref_name }}
           body: |
             ## BankStatement Pro ${{ github.ref_name }}
-
-            ### What's new
-            - Fix Coordinate bbox detection — dynamic column header finding
-            - Fixes Canara bug where extra content above header shifted bbox"
-
             ### Download
             Download the installer below and run it.
         env:
