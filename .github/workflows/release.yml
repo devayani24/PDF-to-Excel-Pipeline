@@ -40,7 +40,8 @@ jobs:
             ## BankStatement Pro ${{ github.ref_name }}
 
             ### What's new
-            - Add your release notes here
+            - Fix Coordinate bbox detection — dynamic column header finding
+            - Fixes Canara bug where extra content above header shifted bbox"
 
             ### Download
             Download the installer below and run it.

@@ -1,6 +1,6 @@
 ; BankStatement Pro - Inno Setup Script
 #define MyAppName "BankStatement Pro"
-#define MyAppVersion "2.0.0"
+#define MyAppVersion "2.0.1"
 #define MyAppPublisher "DeeJay Infotech"
 #define MyAppExeName "BankStatement Pro.exe"
 
