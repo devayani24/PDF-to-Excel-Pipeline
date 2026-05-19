@@ -17,6 +17,7 @@ from src.processors.city_union_bank_processor import CityUnionProcessor
 from src.processors.HDFC_processor import HDFCProcessor
 from src.processors.KVB_processor import KVBProcessor
 from src.processors.SBI_processor import SBIProcessor
+from src.tally_format import convert_to_tally_format
 from src.logger import logging
 
 # ─── COLORS ───────────────────────────────────────────────────────────────────
@@ -192,9 +193,15 @@ def process_file():
     password = handle_pdf_password()
     if password is None and is_pdf_encrypted(selected_file):
         return
+    
+    # ← Ask account number here (main thread) before starting thread
+    bank_ledger = get_bank_ledger_name()
+    if not bank_ledger:
+        messagebox.showwarning("Cancelled", "Account number is required.")
+        return
 
     show_loading(True)
-    threading.Thread(target=run_process, args=(password,), daemon=True).start()
+    threading.Thread(target=run_process, args=(password,bank_ledger), daemon=True).start()
 
 
 def handle_pdf_password():
@@ -249,7 +256,7 @@ def validate_output(df) -> tuple[bool, str]:
 
     return True, ""
 
-def run_process(password):
+def run_process(password, bank_ledger):
     try:
         processor_class = BANK_PROCESSORS.get(selected_bank)
         if not processor_class:
@@ -264,7 +271,7 @@ def run_process(password):
             root.after(0, lambda msg=error_msg: messagebox.showerror("Validation Failed", msg))
             return
 
-        save_file(df)
+        save_file(df, bank_ledger)
 
     except Exception as e:
         logging.error(f"Processing failed: {e}")
@@ -280,21 +287,44 @@ def run_process(password):
     finally:
         root.after(0, lambda: show_loading(False))
 
+BANK_LEDGER_CACHE = {}  # remembers last entered name per bank
 
-def save_file(df):
+def get_bank_ledger_name():
+    last_used = BANK_LEDGER_CACHE.get(selected_bank, "")
+
+    account_no = simpledialog.askstring(
+        "Account Number",
+        f"Enter the {selected_bank} account number:",
+        initialvalue=last_used,
+        parent=root
+    )
+
+    if not account_no:
+        return None
+
+    account_no  = account_no.strip()
+    ledger_name = f"{selected_bank.upper()} A/C NO.{account_no}"
+
+    BANK_LEDGER_CACHE[selected_bank] = account_no  # save for next time
+
+    return ledger_name
+
+
+def save_file(df, bank_ledger):
     base_name = os.path.splitext(os.path.basename(selected_file))[0]
     timestamp = datetime.now().strftime("%d%m%y_%H%M")
-    filename  = f"{base_name}_output_{timestamp}.csv"
+    filename  = f"{base_name}_output_{timestamp}.xlsx"
     path      = select_save_location(filename)
 
     if path:
-        df.to_csv(path, index=False)
+        result = convert_to_tally_format(df, bank_ledger = bank_ledger)
+        result.to_excel(path, index=False)
         root.after(0, lambda: [
-            status_var.set(f"✓ Saved successfully — {len(df)} transactions extracted"),
+            status_var.set(f"✓ Saved successfully — {len(result)} transactions extracted"),
             messagebox.showinfo(
                 "Success",
                 f"✅  Processing complete!\n\n"
-                f"Transactions extracted : {len(df)}\n"
+                f"Transactions extracted : {len(result)}\n"
                 f"Saved at               : {path}"
             )
         ])

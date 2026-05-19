@@ -131,7 +131,7 @@ class BaseTextParser:
 
             df = convert_list_to_dataframe(
                 dates, full_txn, debits, credits, balances,
-                columns=["date", "transaction_details", "debit", "credit", "balance"]
+                columns=["Date", "Transaction_details", "Debit", "Credit", "Balance"]
             )
 
             logging.info(f"{self.__class__.__name__} transform completed")

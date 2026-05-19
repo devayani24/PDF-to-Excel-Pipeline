@@ -33,5 +33,5 @@ def test_extract_details_removes_noise(parser):
 
 def test_transform_output(kotak_df):
     result = KotakTransactionParser(kotak_df).transform()
-    assert set(result.columns) == {"date", "transaction_details", "debit", "credit", "balance"}
+    assert set(result.columns) == {"Date", "Transaction_details", "Debit", "Credit", "Balance"}
     assert len(result) == 2

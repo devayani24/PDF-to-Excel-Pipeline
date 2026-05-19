@@ -163,7 +163,7 @@ class BaseCoordinateParser:
 
             return convert_list_to_dataframe(
                 dates, corrected_particulars, withdrawals, deposits, balances,
-                columns=['Date', 'Transactional details', 'Debit', 'Credit', 'Balance']
+                columns=['Date', 'Transaction_details', 'Debit', 'Credit', 'Balance']
             )
 
         except Exception as e:

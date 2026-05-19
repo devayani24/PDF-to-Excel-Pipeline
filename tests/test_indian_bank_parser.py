@@ -15,5 +15,5 @@ def indian_bank_df():
 
 def test_transform_output(indian_bank_df):
     result = IndianBankParser(indian_bank_df).transform()
-    assert set(result.columns) == {"date", "transaction_details", "debit", "credit", "balance"}
+    assert set(result.columns) == {"Date", "Transaction_details", "Debit", "Credit", "Balance"}
     assert len(result) == 2

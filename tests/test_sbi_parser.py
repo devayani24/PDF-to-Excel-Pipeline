@@ -26,5 +26,5 @@ def test_extract_amounts(parser):
 
 def test_transform_output(sbi_df):
     result = SBITransactionParser(sbi_df).transform()
-    assert set(result.columns) == {"date", "transaction_details", "debit", "credit", "balance"}
+    assert set(result.columns) == {"Date", "Transaction_details", "Debit", "Credit", "Balance"}
     assert len(result) == 2

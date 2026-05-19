@@ -41,5 +41,5 @@ def test_extract_amounts_debit(parser):
 
 def test_transform_output(parser):
     result = parser.transform()
-    assert set(result.columns) == {"date", "transaction_details", "debit", "credit", "balance"}
+    assert set(result.columns) == {"Date", "Transaction_details", "Debit", "Credit", "Balance"}
     assert len(result) == 2

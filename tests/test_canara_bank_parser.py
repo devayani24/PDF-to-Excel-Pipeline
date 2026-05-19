@@ -4,7 +4,7 @@ from src.parsers.canara_bank_parser import CanaraBankParser
 
 def test_transform_output():
     result = CanaraBankParser("tests/artifacts/CanaraBankSample.pdf").transform()
-    assert {"Date", "Transactional details", "Debit", "Credit", "Balance"}.issubset(set(result.columns))
+    assert {"Date", "Transaction_details", "Debit", "Credit", "Balance"}.issubset(set(result.columns))
     assert not result.empty
 
 def test_fix_particulars_no_bleed():

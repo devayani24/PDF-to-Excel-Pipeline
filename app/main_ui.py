@@ -17,6 +17,7 @@ from src.processors.city_union_bank_processor import CityUnionProcessor
 from src.processors.HDFC_processor import HDFCProcessor
 from src.processors.KVB_processor import KVBProcessor
 from src.processors.SBI_processor import SBIProcessor
+from src.tally_format import convert_to_tally_format
 
 
 # ---------------- STATE ---------------- #
@@ -155,15 +156,16 @@ def save_file(df):
     base_name = os.path.splitext(os.path.basename(selected_file))[0]
     timestamp = datetime.now().strftime("%d%m%y_%H%M")
 
-    filename = f"{base_name}_output_{timestamp}.csv"
+    filename = f"{base_name}_output_{timestamp}.xlsx"
     path = select_save_location(filename)
 
     if path:
-        df.to_csv(path, index=False)
+        result = convert_to_tally_format(df, bank_ledger = selected_bank)
+        result.to_excel(path, index=False)
         root.after(0, lambda: messagebox.showinfo(
             "Success",
             f"✅ Processing complete!\n\n"
-            f"Transactions extracted : {len(df)}\n"
+            f"Transactions extracted : {len(result)}\n"
             f"Saved at               : {path}"
         ))
     else:
