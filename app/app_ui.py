@@ -419,7 +419,7 @@ root.iconbitmap(resource_path("bankstatement_pro.ico"))
 # Force Windows to use correct icon
 ico_path = resource_path("bankstatement_pro.ico")
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
-    "DeJayInfotech.BankStatementPro.2.0.1"
+    "DeJayInfotech.BankStatementPro.2.1.0"
 )
 
 # This is the key fix for taskbar

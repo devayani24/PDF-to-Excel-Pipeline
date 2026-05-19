@@ -35,5 +35,10 @@ jobs:
             ## BankStatement Pro ${{ github.ref_name }}
             ### Download
             Download the installer below and run it.
+            - Added convert_to_tally_format() in src/tally_format.py
+            - Generates two rows per transaction (Dr/Cr double entry)
+            - Receipt: bank ledger Dr, Online Receipts Cr
+            - Payment: Sus Dr, bank ledger Cr
+            - Added account number dialog in main thread before processing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
